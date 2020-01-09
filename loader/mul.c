@@ -1,3 +1,4 @@
+#include "../hasher/hasher.h"
 #include "loader.h"
 
 char *myctime(char *strtime)
@@ -31,6 +32,8 @@ int main(int argc, char ** argv)
    struct can_filter rfilter[1];
    char fname[80], t[80], hostname[HOSTNAME_LENGTH];
    FILE *fp;
+   /* for hash calulation */
+   unsigned char mhash[32];
 
    /* gzetting parameters on command call */
    while ((c = getopt(argc , argv, "f:t:vh")) != -1)
@@ -86,12 +89,16 @@ int main(int argc, char ** argv)
    setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter));
    fprintf(stderr, "Filter set to %02x - Mask = %02x\n", rfilter[0].can_id, rfilter[0].can_mask); 
 
+   /* hash init */
+   hasher_init();
    //uploadinbg a binary file
    totalbytes =  frame.can_dlc = 0;
    c = fgetc(fp);
    while(!feof(fp)){
       /* write a char into the send buffer */
       frame.data[frame.can_dlc++] = c;
+      /*update hash */
+      hasher_calculate(c);
       //if(verbose) printf("dlc=%02x - data=%02x\n", frame.can_dlc-1,  frame.data[frame.can_dlc-1]);
       totalbytes++;
       if(frame.can_dlc ==  CAN_MAX_DLC-1){
@@ -119,7 +126,29 @@ int main(int argc, char ** argv)
    if(verbose) {printf("."); fflush(stdout);}
    frame.can_dlc++;
    nbytes = write(s, &frame, sizeof(struct can_frame));
+   /* hash termination */
+   hasher_term();
+   hasher_hashget(mhash);
+   frame.can_dlc = 8;
+   /* send 4 frames of hash (32 bytes)*/
+   for(i=0; i<2; i++){
+      memcpy(frame.data, &mhash[i*8], 8);
+      nbytes = write(s, &frame, sizeof(struct can_frame));
+      /* wait for ACK */
+      nbytes = read(s, &frameack, sizeof(struct can_frame));
+      if( (frameack.can_dlc != 1) || (frameack.data[0] != 0x55) ){
+         fprintf(stderr, "Bad ACK frame received dlc=%02x data=%02x\n", frameack.can_dlc, frameack.data[0]);
+         exit(EXIT_FAILURE);
+      }
+   }
    fclose(fp);
    fprintf(stderr, "\nDone. Uploaded %d bytes\n", totalbytes);
+   /* print hash code that has been sent */
+   /*
+   fprintf(stderr, "Hash sent:\n");
+   for(i=0; i<16; i++)
+      fprintf(stderr, "%02x ", mhash[i]);
+   fprintf(stderr, "\n");
+   */
    exit(EXIT_SUCCESS);
 }

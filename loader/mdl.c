@@ -1,3 +1,4 @@
+#include "../hasher/hasher.h"
 #include "loader.h"
 
 char *myctime(char *strtime)
@@ -31,6 +32,8 @@ int main(int argc, char ** argv)
    struct can_filter rfilter[1];
    char fname[80], t[80], hostname[HOSTNAME_LENGTH];
    FILE *fp;
+   /* for hash calulation */
+   unsigned char mhash[32], rmhash[32];
 
    /* getting the hostname */
    if(gethostname(hostname, HOSTNAME_LENGTH) == -1){
@@ -88,6 +91,8 @@ int main(int argc, char ** argv)
    setsockopt(s, SOL_CAN_RAW, CAN_RAW_FILTER, &rfilter, sizeof(rfilter));
    fprintf(stderr, "Filter set to %02x - Mask = %02x\n", rfilter[0].can_id, rfilter[0].can_mask); 
 
+   /* hash init */
+   hasher_init();
    //downloading a binary file
    done = 0; totalbytes = 0;
    while(!done){
@@ -110,6 +115,8 @@ int main(int argc, char ** argv)
       for(i=0; i< frame.can_dlc-1; i++){
       //printf("%02X ",  frame.data[i]);
          fputc(frame.data[i], fp);
+         /*update hash */
+         hasher_calculate(frame.data[i]);
       }
       done =  frame.data[frame.can_dlc-1] & 0x01;
       //printf("Next=%s\n", done==1 ? "true" : "false");
@@ -119,8 +126,39 @@ int main(int argc, char ** argv)
       frameack.can_dlc = 1;
       frameack.data[0] = 0x55;
       nbytes = write(s, &frameack, sizeof(struct can_frame));
-   } 
+   }
    fclose(fp);
    fprintf(stderr, "\nDone. Downloaded %d bytes\n", totalbytes);
+   /* hash termination */
+   hasher_term();
+   hasher_hashget(mhash);
+   /* get the 4 hash frame (32 bytes) */
+   for (i = 0; i<2; i++){
+      nbytes = read(s, &frame, sizeof(struct can_frame));
+      memcpy(&rmhash[i*8], frame.data, 8);
+      /* send ACK */
+      frameack.can_id  = 0x002;
+      frameack.can_dlc = 1;
+      frameack.data[0] = 0x55;
+      nbytes = write(s, &frameack, sizeof(struct can_frame));
+   }
+   /* print hash code received and calculated */
+   /*
+   fprintf(stderr, "Received hash:\n"); 
+   for(i=0; i<16; i++)
+      fprintf(stderr, "%02x ", rmhash[i]);
+   fprintf(stderr, "\n");
+   fprintf(stderr, "Calculated hash:\n"); 
+   for(i=0; i<16; i++)
+      fprintf(stderr, "%02x ", mhash[i]);
+   fprintf(stderr, "\n");
+   */
+
+   /* compare hash received with hash calculated */
+   if(memcmp(mhash, rmhash, 16)) {
+      fprintf(stderr, "Bad hash comparison\n");
+      exit(EXIT_FAILURE);
+   }
+   fprintf(stderr, "SHA MD5 comparison is OK\n");
    exit(EXIT_SUCCESS);
 }
