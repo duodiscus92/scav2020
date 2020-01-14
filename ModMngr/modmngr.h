@@ -5,6 +5,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
+#include <linux/can.h>
+#include <linux/can/raw.h>
+#include "../loader/loader.h"
 
 #define PORTNAME_LENGTH		6
 #define UNITDEF_LENGTH		10
@@ -35,7 +38,7 @@ typedef struct port {
    char unit[UNITDEF_LENGTH+1];
    int id;			 	/* logical id */
    unsigned short int period;	 	/* frame emission period in ms (for out port only, 0 for inport) */ 
-   unsigned char idx;		 	/* CAN frame id */
+   canid_t idx;			 	/* CAN frame id */
    unsigned char length;
    union info data;
    char direction;		 	/* IN, OUT, or INOUT */
@@ -49,6 +52,11 @@ typedef struct module {
    unsigned char noutport;		/* number ou outport */
    PORT *outport[MAX_OUTPORT];		/* array of ptr on outport */
    PORT *diagport;			/* ptr on diagnostic out port */
+   int sock;
+   struct sockaddr_can addr;
+   struct can_frame frame;
+   struct ifreq ifr;
+   struct can_filter rfilter[MAX_INPORT];
 }MODULE;
 
 class ModMngr
@@ -59,8 +67,8 @@ public:
    ~ModMngr();
 
    int mopen(const char *name, int ninport, int noutport);
-   int opcreat(const char *name, const char *unit, unsigned char length);
-   int ipcreat(const char *name, const char *unit, unsigned char length);
+   int opcreat(const char *name, const char *unit, unsigned char length, canid_t idx);
+   int ipcreat(const char *name, const char *unit, unsigned char length, canid_t idx);
    char *getMname(void);		// get module name
    char *getOpname(unsigned char index);// get outport name
    char *getIpname(unsigned char index);// get inport name
@@ -69,9 +77,9 @@ private:
 
    const char *ifname = "can0";
    MODULE tm;
-   static int mctr;
+   static int mctr;			// module counter (obsolete)
    static int ipctr;			// input port counter
-   static int opctr;			// ouput port countery
+   static int opctr;			// ouput port counter
    static int pid;			// logical port id
 };
 #endif

@@ -44,7 +44,7 @@ int ModMngr::mopen(const char *name, int ninport, int noutport)
 }
 
 // create a CAN outport 
-int ModMngr::opcreat(const char *name, const char *unit, unsigned char length)
+int ModMngr::opcreat(const char *name, const char *unit, unsigned char length, canid_t idx)
 {
    PORT *p;
 
@@ -53,19 +53,47 @@ int ModMngr::opcreat(const char *name, const char *unit, unsigned char length)
       cerr << "Unable to create outport \"" << name << "\" in module \"" << tm.name <<  "\" : max outport already opened\n";
    }
 
+   // port struct allocation and setup
    p = (PORT*) malloc(sizeof(PORT));
    p->id = opctr;
    strncpy(p->name, name, PORTNAME_LENGTH);
    strncpy(p->unit, unit, UNITDEF_LENGTH);
    p->length = length;
    p->direction = OUT;
+   p->idx = idx;
    tm.outport[opctr] = p;
+   // SocketCan initializations
+   // Opening a soxket
+   if((tm.sock = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
+      cerr << "Error while opening socket in module \"" << tm.name <<  "\"\n";
+      exit(EXIT_FAILURE);
+   }
+
+   // linking the socket to an interface and other settings/
+   strcpy(tm.ifr.ifr_name, ifname);
+   ioctl(tm.sock, SIOCGIFINDEX, &tm.ifr);
+   tm.addr.can_family  = AF_CAN;
+   tm.addr.can_ifindex = tm.ifr.ifr_ifindex;
+
+   // binding the socket
+   if(bind(tm.sock, (struct sockaddr *)&tm.addr, sizeof(tm.addr)) < 0) {
+      cerr <<  "Error in socket bind in module  \"" << tm.name <<  "\"\n";
+      exit(EXIT_FAILURE);
+   }
+
+   // setting the filter to receive only the ACK can message from the target host */
+   tm.rfilter[0].can_id = 0x002;
+   tm.rfilter[0].can_mask = CAN_SFF_MASK;
+   setsockopt(tm.sock, SOL_CAN_RAW, CAN_RAW_FILTER, &tm.rfilter, sizeof(tm.rfilter));
+   fprintf(stderr, "Filter set to %02x - Mask = %02x\n", tm.rfilter[0].can_id, tm.rfilter[0].can_mask); 
+
+   // all well done
    cerr << "Outport \"" << name << "\" in module \"" << tm.name <<  "\" created\n";
    return opctr++;
 }
 
 // create a CAN inport 
-int ModMngr::ipcreat(const char *name, const char *unit, unsigned char length)
+int ModMngr::ipcreat(const char *name, const char *unit, unsigned char length, canid_t idx)
 {
    PORT *p;
 
@@ -79,7 +107,8 @@ int ModMngr::ipcreat(const char *name, const char *unit, unsigned char length)
    strncpy(p->name, name, PORTNAME_LENGTH);
    strncpy(p->unit, unit, UNITDEF_LENGTH);
    p->length = length;
-   p->direction = OUT;
+   p->direction = IN;
+   p->idx = idx;
    tm.inport[ipctr] = p;
    cerr << "Inport \"" << name << "\" in module \"" << tm.name <<  "\" created\n";
    return ipctr++;
@@ -124,7 +153,7 @@ int main (int argc, char ** argv)
 */
 
    // test of a 1st outport creation
-   if ((p1 = mymngr.opcreat("LATDEV", "cm", sizeof(int))) == -1){
+   if ((p1 = mymngr.opcreat("LATDEV", "cm", sizeof(int), LATDEV)) == -1){
       fprintf(stderr, "Unable to open the outport \"LATDEV\"\n");
       exit(EXIT_FAILURE);
    }
@@ -132,15 +161,15 @@ int main (int argc, char ** argv)
       cerr << "OutPort \"" << mymngr.getOpname(p1) << "\" succesfully opened with the ID : " << p1 << "\n"; 
 
    // test of a 2nd outport creation
-   if ((p1 = mymngr.opcreat("DI2FRO", "cm", sizeof(int))) == -1){
+   if ((p1 = mymngr.opcreat("DI2FRO", "cm", sizeof(int), DI2FRO)) == -1){
       fprintf(stderr, "Unable to open the outport \"DI2FRO\"\n");
       exit(EXIT_FAILURE);
    }
    else
       cerr << "OutPort \"" << mymngr.getOpname(p1) << "\" succesfully opened with the ID : " << p1 << "\n"; 
-   
+      
    // test of a 1st inport creation
-   if ((p1 = mymngr.opcreat("LATDEV", "cm", sizeof(int))) == -1){
+   if ((p1 = mymngr.opcreat("LATDEV", "cm", sizeof(int), LATDEV)) == -1){
       fprintf(stderr, "Unable to open the inport \"LATDEV\"\n");
       exit(EXIT_FAILURE);
    }
@@ -148,7 +177,7 @@ int main (int argc, char ** argv)
       cerr << "InPort \"" << mymngr.getOpname(p1) << "\" succesfully opened with the ID : " << p1 << "\n"; 
 
    // test of a 2nd intport creation
-   if ((p1 = mymngr.opcreat("DI2FRO", "cm", sizeof(int))) == -1){
+   if ((p1 = mymngr.opcreat("DI2FRO", "cm", sizeof(int), DI2FRO)) == -1){
       fprintf(stderr, "Unable to open the inport \"DI2FRO\"\n");
       exit(EXIT_FAILURE);
    }
