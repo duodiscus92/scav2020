@@ -1,7 +1,7 @@
 #include "modmngr.h"
 #include <thread>
 #include <chrono>
-#define MODMNGR_STANDALONE
+//#define MODMNGR_STANDALONE
 
 using namespace std;
 
@@ -63,6 +63,7 @@ int ModMngr::opcreat(const char *name, const char *unit, unsigned char length, c
    p->direction = OUT;
    p->idx = idx;
    p->period = period;
+   p->firstcall = 1;
    tm.outport[opctr] = p;
    // SocketCan initializations
    // Opening a socket
@@ -97,99 +98,43 @@ int ModMngr::opcreat(const char *name, const char *unit, unsigned char length, c
 
 // write a value on an outport
 // thread to send un unsigned char
-void UC_cansend (int sock, can_frame *frame, int period)
+void ModMngr::UC_cansend (int id, int period)
 {
    int nbytes;
    for(;;){
-     nbytes = write(sock, frame, sizeof(struct can_frame));
-     cerr << "Sending unsigned char frame\n";
+     nbytes = write(tm.sock,  &tm.outport[id]->frame, sizeof(struct can_frame));
+     //cerr << "Sending a msg of " << (int)tm.outport[id]->length << " bytes\n";
      this_thread::sleep_for (chrono::milliseconds(period));
    }
 }
-// wrtie an unsigned char
-int ModMngr::pwrite(unsigned char value, /*unsigned char size,*/ int id)
+// write an unsigned char
+int ModMngr::pwrite(void *value,  int size, int id)
 {
    int nbytes;
    unsigned char length = tm.outport[id]->length;
 
-   if(length != sizeof (unsigned char)){
-      cerr << "pwrite: Unable to send an unsigned char on this port\n"; 
+   if(length != size){
+      cerr << "pwrite: Unable to send a msg on this port due to over/under size\n"; 
       return -1;
    }
 
-   tm.outport[id]->data.uc[0] = value;
-   //memcpy(&tm.frame.data, &tm.outport[id]->data.uc, size);
-   memcpy(&tm.outport[id]->frame.data, &tm.outport[id]->data.uc, length);
+   if (!tm.outport[id]->firstcall){
+     //update the value to be sent
+     memcpy(&tm.outport[id]->frame.data, value, length);
+     return 0;
+   }
+   tm.outport[id]->firstcall = 0;
+   memcpy(&tm.outport[id]->frame.data, value, length);
    tm.outport[id]->frame.can_id = tm.outport[id]->idx;
    tm.outport[id]->frame.can_dlc = tm.outport[id]->length;
    // period == 0 means one shot, then thread in not util 
    if (tm.outport[id]->period)
-      thread (UC_cansend, tm.sock, &tm.outport[id]->frame, tm.outport[id]->period).detach();
+      thread (&ModMngr::UC_cansend, this, id,  tm.outport[id]->period).detach();
    else
       nbytes = write(tm.sock, &tm.outport[id]->frame, sizeof(struct can_frame));
-   cerr << "pwrite: Unsigned char sent succesfully\n";
+   cerr << "pwrite: msg succesfully\n";
    return 0;
 }
-
-int  ModMngr::pwrite(char value, /*unsigned char size,*/ int id)
-{
-   int nbytes;
-
-   tm.outport[id]->data.sc[0] = value;
-   memcpy(&tm.outport[id]->frame.data, &tm.outport[id]->data.sc,  tm.outport[id]->length);
-   tm.outport[id]->frame.can_id = tm.outport[id]->idx;
-   tm.outport[id]->frame.can_dlc = tm.outport[id]->length;
-   nbytes = write(tm.sock, &tm.outport[id]->frame, sizeof(struct can_frame));
-   cerr << "Signed char sent succesfully\n";
-   return 0;
-}
-
-int  ModMngr::pwrite(unsigned short int value, /*unsigned char size,*/ int id)
-{
-   int nbytes;
-
-   tm.outport[id]->data.usi[0] = value;
-   memcpy(&tm.outport[id]->frame.data, &tm.outport[id]->data.usi, tm.outport[id]->length);
-   tm.outport[id]->frame.can_id = tm.outport[id]->idx;
-   tm.outport[id]->frame.can_dlc = tm.outport[id]->length;
-   nbytes = write(tm.sock, &tm.outport[id]->frame, sizeof(struct can_frame));
-   cerr << "Unsigned short int sent succesfully\n";
-   return 1;
-}
-
-// thread to send a signed short int
-void SSI_cansend (int sock, can_frame *frame, int period)
-{
-   int nbytes;
-   for(;;){
-     nbytes = write(sock, frame, sizeof(struct can_frame));
-     cerr << "Sending signed short int frame\n";
-     this_thread::sleep_for (chrono::milliseconds(period));
-   }
-}
-// write a signed short int
-int  ModMngr::pwrite(short int value, /*unsigned char size,*/ int id)
-{
-   int nbytes;
-   unsigned char length = tm.outport[id]->length;
-
-   if(length != sizeof (short int)){
-      cerr << "pwrite: Unable to send a short int on this port\n"; 
-      return -1;
-   }
-   tm.outport[id]->data.ssi[0] = value;
-   memcpy(&tm.outport[id]->frame.data, &tm.outport[id]->data.ssi, length);
-   tm.outport[id]->frame.can_id = tm.outport[id]->idx;
-   tm.outport[id]->frame.can_dlc = length;
-   // period == 0 means one shot, then thread in not util 
-   if (tm.outport[id]->period)
-      thread (SSI_cansend, tm.sock, &tm.outport[id]->frame, tm.outport[id]->period).detach();
-   else
-      nbytes = write(tm.sock, &tm.outport[id]->frame, sizeof(struct can_frame));
-   cerr << "pwrite: Signed short int sent succesfully\n";
-   return 1;
-}
-
 
 // create a CAN inport 
 int ModMngr::ipcreat(const char *name, const char *unit, unsigned char length, canid_t idx, unsigned short period)
@@ -233,7 +178,7 @@ char *ModMngr::getIpname(unsigned char index)
 int main (int argc, char ** argv)
 {
 //   MODULE *p, *q;
-   int mn1, mn2, op1, op2, ip1, ip2;
+   int mn1, mn2, op1, op2, op3, ip1, ip2;
    ModMngr mymngr;
 
    // test of module registration
@@ -267,6 +212,14 @@ int main (int argc, char ** argv)
    }
    else
       cerr << "OutPort \"" << mymngr.getOpname(op1) << "\" succesfully opened with the ID : " << op2 << "\n"; 
+
+   // test of a 3rd outport creation
+   if ((op3 = mymngr.opcreat("AS2FRO", "cm", 8, AS2FRO, 250)) == -1){
+      fprintf(stderr, "Unable to open the outport \"AS2FRO\"\n");
+      exit(EXIT_FAILURE);
+   }
+   else
+      cerr << "OutPort \"" << mymngr.getOpname(op1) << "\" succesfully opened with the ID : " << op3 << "\n"; 
 /*
    // test of a 1st inport creation
    if ((ip1 = mymngr.opcreat("LATDEV", "cm", sizeof(int), LATDEV)) == -1){
@@ -284,12 +237,19 @@ int main (int argc, char ** argv)
    else
       cerr << "InPort \"" << mymngr.getOpname(ip2) << "\" succesfully opened with the ID : " << ip2 << "\n"; 
 */
-   mymngr.pwrite((unsigned char)'H', op1);
-   //mymngr.pwrite((char)-127, op1);
-   //mymngr.pwrite((unsigned char)255, op1);
-   mymngr.pwrite((short int)256, op2);
-   //mymngr.pwrite((short int)257, op1);
-   sleep(10); 
+   char c = 'H';
+   mymngr.pwrite(&c, sizeof(c), op1);
+   short int si = 256;
+   mymngr.pwrite(&si, sizeof(si), op2);
+   sleep(5);
+   c = '0';
+   mymngr.pwrite(&c, sizeof(c), op1);
+   si = 4095;
+   mymngr.pwrite(&si, sizeof(si), op2);
+   char msg[10];
+   strcpy(msg, "HI WORLD");
+   mymngr.pwrite(msg, strlen(msg), op3);
+   sleep(20); 
    cerr << "ModMngr normally terminated\n";
    exit(EXIT_SUCCESS);
 }

@@ -45,6 +45,7 @@ typedef struct port {
    struct can_frame frame;
    //struct ifreq ifr;
    struct can_filter rfilter[MAX_INPORT];
+   int firstcall;
 }PORT;
 
 typedef struct module {
@@ -75,10 +76,7 @@ public:
    char *getMname(void);							// get module name
    char *getOpname(unsigned char index);					// get outport name
    char *getIpname(unsigned char index);					// get inport name
-   int pwrite(unsigned char value, /*unsigned char size,*/ int pid);		// write an unsigned char on port of id pid */
-   int pwrite(char value, /*unsigned char size,*/ int pid);			// id. for char
-   int pwrite(unsigned short int value, /*unsigned char size,*/ int pid);	// id. for unsigned short int
-   int pwrite(short int value, /*unsigned char size,*/ int pid);		// id. for short int
+   int pwrite(void *value, int size, int pid);					// write an unsigned char on port of id pid */
 
 private:
 
@@ -88,6 +86,7 @@ private:
    static int ipctr;			// input port counter
    static int opctr;			// ouput port counter
    static int pid;			// logical port id
+   void UC_cansend (int id, int period);					// thread
 };
 #endif
 
