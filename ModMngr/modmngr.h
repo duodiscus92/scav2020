@@ -23,14 +23,14 @@
 enum cnamsg {LATDEV=0x11, DI2FRO=0x12, AS2FRO=0x13,DITORO=0x14, AS2RRO=0x15, MEDASP=0x16,SPESPT=0X17, MEAWHA=0x18,WHASPT=0x19};
 
 union info {
-   char 		csi[8];
-   unsigned char 	cusi[8];
+   char 		sc[8];
+   unsigned char 	uc[8];
    short  int 		ssi[4];
-   unsigned short int	sui[4];
-   long int		lsi[2];
-   unsigned long int	lui[2];
-   long long int	llsi;
-   unsigned long long int llui;
+   unsigned short int	usi[4];
+   long int		sli[2];
+   unsigned long int	uli[2];
+   long long int	slli;
+   unsigned long long int ulli;
 };
 
 typedef struct port {
@@ -42,6 +42,9 @@ typedef struct port {
    unsigned char length;
    union info data;
    char direction;		 	/* IN, OUT, or INOUT */
+   struct can_frame frame;
+   //struct ifreq ifr;
+   struct can_filter rfilter[MAX_INPORT];
 }PORT;
 
 typedef struct module {
@@ -54,9 +57,9 @@ typedef struct module {
    PORT *diagport;			/* ptr on diagnostic out port */
    int sock;
    struct sockaddr_can addr;
-   struct can_frame frame;
+   //struct can_frame frame;
    struct ifreq ifr;
-   struct can_filter rfilter[MAX_INPORT];
+   //struct can_filter rfilter[MAX_INPORT];
 }MODULE;
 
 class ModMngr
@@ -67,11 +70,15 @@ public:
    ~ModMngr();
 
    int mopen(const char *name, int ninport, int noutport);
-   int opcreat(const char *name, const char *unit, unsigned char length, canid_t idx);
-   int ipcreat(const char *name, const char *unit, unsigned char length, canid_t idx);
-   char *getMname(void);		// get module name
-   char *getOpname(unsigned char index);// get outport name
-   char *getIpname(unsigned char index);// get inport name
+   int opcreat(const char *name, const char *unit, unsigned char length, canid_t idx, unsigned short period);
+   int ipcreat(const char *name, const char *unit, unsigned char length, canid_t idx, unsigned short period);
+   char *getMname(void);							// get module name
+   char *getOpname(unsigned char index);					// get outport name
+   char *getIpname(unsigned char index);					// get inport name
+   int pwrite(unsigned char value, /*unsigned char size,*/ int pid);		// write an unsigned char on port of id pid */
+   int pwrite(char value, /*unsigned char size,*/ int pid);			// id. for char
+   int pwrite(unsigned short int value, /*unsigned char size,*/ int pid);	// id. for unsigned short int
+   int pwrite(short int value, /*unsigned char size,*/ int pid);		// id. for short int
 
 private:
 
