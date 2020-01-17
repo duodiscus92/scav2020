@@ -22,6 +22,7 @@
 
 enum cnamsg {LATDEV=0x11, DI2FRO=0x12, AS2FRO=0x13,DITORO=0x14, AS2RRO=0x15, MEDASP=0x16,SPESPT=0X17, MEAWHA=0x18,WHASPT=0x19};
 
+/*
 union info {
    char 		sc[8];
    unsigned char 	uc[8];
@@ -32,20 +33,23 @@ union info {
    long long int	slli;
    unsigned long long int ulli;
 };
+*/
 
 typedef struct port {
    char name[PORTNAME_LENGTH+1];
    char unit[UNITDEF_LENGTH+1];
-   int id;			 	/* logical id */
+   int id;			 	/* logical port id */
    unsigned short int period;	 	/* frame emission period in ms (for out port only, 0 for inport) */ 
    canid_t idx;			 	/* CAN frame id */
    unsigned char length;
-   union info data;
    char direction;		 	/* IN, OUT, or INOUT */
    struct can_frame frame;
-   //struct ifreq ifr;
-   struct can_filter rfilter[MAX_INPORT];
    int firstcall;
+   int updated;
+   int sockout, sockin;
+   struct sockaddr_can addr;
+   struct ifreq ifr;			// pysical interface
+   struct can_filter rfilter[1];// filters for inports
 }PORT;
 
 typedef struct module {
@@ -56,11 +60,11 @@ typedef struct module {
    unsigned char noutport;		/* number ou outport */
    PORT *outport[MAX_OUTPORT];		/* array of ptr on outport */
    PORT *diagport;			/* ptr on diagnostic out port */
-   int sock;
+   PORT *logport;			/* ptr on data loggin port */
+   int sockout/*, sockin*/;			/* sockets for outport and inport */
    struct sockaddr_can addr;
-   //struct can_frame frame;
-   struct ifreq ifr;
-   //struct can_filter rfilter[MAX_INPORT];
+   struct ifreq ifr;			// pysical interface
+   //struct can_filter rfilter[MAX_INPORT];// filters for inports
 }MODULE;
 
 class ModMngr
@@ -76,7 +80,8 @@ public:
    char *getMname(void);							// get module name
    char *getOpname(unsigned char index);					// get outport name
    char *getIpname(unsigned char index);					// get inport name
-   int pwrite(void *value, int size, int pid);					// write an unsigned char on port of id pid */
+   int pwrite(void *value, int size, int pid);					// write on port of id pid */
+   int pread(void *value, int size, int pid);					// read on port of id pid */
 
 private:
 
@@ -86,7 +91,8 @@ private:
    static int ipctr;			// input port counter
    static int opctr;			// ouput port counter
    static int pid;			// logical port id
-   void UC_cansend (int id, int period);					// thread
+   void cansend (int id, int period);	// thread to send a frame
+   int canrecv (int id, int period);	// thread ro receive a frame
 };
 #endif
 
