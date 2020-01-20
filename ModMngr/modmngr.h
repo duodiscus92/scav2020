@@ -7,7 +7,9 @@
 #include <iostream>
 #include <linux/can.h>
 #include <linux/can/raw.h>
+#include <mutex>
 #include "../loader/loader.h"
+using  namespace std;
 
 #define PORTNAME_LENGTH		6
 #define UNITDEF_LENGTH		10
@@ -44,12 +46,13 @@ typedef struct port {
    unsigned char length;
    char direction;		 	/* IN, OUT, or INOUT */
    struct can_frame frame;
-   int firstcall;
+   //int firstcall;
    int updated;
    int sockout, sockin;
    struct sockaddr_can addr;
    struct ifreq ifr;			// pysical interface
-   struct can_filter rfilter[1];// filters for inports
+   struct can_filter rfilter[1];	// filters for inports
+   mutex ver;
 }PORT;
 
 typedef struct module {
@@ -59,12 +62,6 @@ typedef struct module {
    PORT *inport[MAX_INPORT];		/* array of ptr on inport */
    unsigned char noutport;		/* number ou outport */
    PORT *outport[MAX_OUTPORT];		/* array of ptr on outport */
-   PORT *diagport;			/* ptr on diagnostic out port */
-   PORT *logport;			/* ptr on data loggin port */
-   int sockout/*, sockin*/;			/* sockets for outport and inport */
-   struct sockaddr_can addr;
-   struct ifreq ifr;			// pysical interface
-   //struct can_filter rfilter[MAX_INPORT];// filters for inports
 }MODULE;
 
 class ModMngr

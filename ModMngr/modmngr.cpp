@@ -1,7 +1,6 @@
 #include "modmngr.h"
 #include <thread>
 #include <chrono>
-
 using namespace std;
 
 //Module counter
@@ -50,12 +49,19 @@ int ModMngr::mopen(const char *name, int ninport, int noutport)
 int ModMngr::opcreat(const char *name, const char *unit, unsigned char length, canid_t idx, unsigned short period)
 {
    PORT *p;
+   int i;
 
-   //if (opctr >=  MAX_OUTPORT){
    if (opctr >=  tm.noutport){
       return -1;
       cerr << "opcreat: Unable to create outport \"" << name << "\" in module \"" << tm.name <<  "\" : max outport already opened\n";
    }
+
+   // test if the port has not been already opened
+   for (i=0; i < opctr; i++)
+      if (!strcmp(tm.outport[i]->name, name)){
+         cerr << "opcreat: Unable to create outport \"" << name << "\" in module \"" << tm.name <<  "\" : an *outport with the same name already exists\n";
+         return -1;
+      }
 
    // port struct allocation and setup
    p = (PORT*) malloc(sizeof(PORT));
@@ -66,29 +72,31 @@ int ModMngr::opcreat(const char *name, const char *unit, unsigned char length, c
    p->direction = OUT;
    p->idx = idx;
    p->period = period;
-   p->firstcall = 1;
+   //p->firstcall = 1;
    tm.outport[opctr] = p;
    // SocketCan initializations
    // Opening a socket
-   if((tm.sockout = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
-      cerr << "opecreat: Error while opening socket for outports in module \"" << tm.name <<  "\"\n";
+   if((tm.outport[opctr]->sockout = socket(PF_CAN, SOCK_RAW, CAN_RAW)) < 0) {
+      cerr << "opcreat: Error while opening socket for outports in module \"" << tm.name <<  "\"\n";
       exit(EXIT_FAILURE);
    }
 
    // linking the socket to an interface and other settings/
-   strcpy(tm.ifr.ifr_name, ifname);
-   ioctl(tm.sockout, SIOCGIFINDEX, &tm.ifr);
-   tm.addr.can_family  = AF_CAN;
-   tm.addr.can_ifindex = tm.ifr.ifr_ifindex;
+   strcpy(tm.outport[opctr]->ifr.ifr_name, ifname);
+   ioctl(tm.outport[opctr]->sockout, SIOCGIFINDEX, &tm.outport[opctr]->ifr);
+   tm.outport[opctr]->addr.can_family  = AF_CAN;
+   tm.outport[opctr]->addr.can_ifindex =  tm.outport[opctr]->ifr.ifr_ifindex;
 
    // binding the socket
-   if(bind(tm.sockout, (struct sockaddr *)&tm.addr, sizeof(tm.addr)) < 0) {
+   if(bind(tm.outport[opctr]->sockout, (struct sockaddr *) &tm.outport[opctr]->addr, sizeof(tm.outport[opctr]->addr)) < 0) {
       cerr <<  "opcreat: Error in socket bind in module  \"" << tm.name <<  "\"\n";
       exit(EXIT_FAILURE);
    }
 
    // all well done
-   cerr << "opcreat: Outport \"" << name << "\" in module \"" << tm.name <<  "\" created\n";
+   tm.outport[opctr]->ver.lock();
+   thread (&ModMngr::cansend, this, opctr,  tm.outport[opctr]->period).detach();
+   cerr << "opcreat: Outport \"" << name << "\" in module \"" << tm.name <<  "\" created with pid: " << opctr << "\n";
    return opctr++;
 }
 
@@ -97,37 +105,31 @@ int ModMngr::opcreat(const char *name, const char *unit, unsigned char length, c
 void ModMngr::cansend (int id, int period)
 {
    int nbytes;
+
+   tm.outport[id]->ver.lock();
+   tm.outport[id]->ver.unlock();
    for(;;){
-     nbytes = write(tm.sockout,  &tm.outport[id]->frame, sizeof(struct can_frame));
-     //cerr << "Sending a msg of " << (int)tm.outport[id]->length << " bytes\n";
-     this_thread::sleep_for (chrono::milliseconds(period));
+      nbytes = write(tm.outport[id]->sockout,  &tm.outport[id]->frame, sizeof(struct can_frame));
+      //cerr << "Sending a msg of " << (int)tm.outport[id]->length << " bytes\n";
+      this_thread::sleep_for (chrono::milliseconds(period));
    }
 }
-// write an unsigned char
+// write a value (1 to 8 bytes)
 int ModMngr::pwrite(void *value,  int size, int id)
 {
    int nbytes;
    unsigned char length = tm.outport[id]->length;
 
    if(length != size){
-      cerr << "cansend: Unable to send a msg on this port due to over/under size\n"; 
+      cerr << "pwrite: ***Error*** in module \"" << tm.name << "\": bad call of pwrite() on port \"" << tm.outport[id]->name <<  "\"\n"; 
+      cerr << "This port was createad to send message of length: " << (int) length << " You call pwrite to send message of length: " << size << "\n";
       return -1;
    }
 
-   if (!tm.outport[id]->firstcall){
-     //update the value to be sent
-     memcpy(&tm.outport[id]->frame.data, value, length);
-     return 0;
-   }
-   tm.outport[id]->firstcall = 0;
    memcpy(&tm.outport[id]->frame.data, value, length);
    tm.outport[id]->frame.can_id = tm.outport[id]->idx;
    tm.outport[id]->frame.can_dlc = tm.outport[id]->length;
-   // period == 0 means one shot, then thread in not util 
-   if (tm.outport[id]->period)
-      thread (&ModMngr::cansend, this, id,  tm.outport[id]->period).detach();
-   else
-      nbytes = write(tm.sockout, &tm.outport[id]->frame, sizeof(struct can_frame));
+   tm.outport[id]->ver.unlock();
    cerr << "pwrite: msg succesfully sent\n";
    return 0;
 }
@@ -168,7 +170,7 @@ int ModMngr::ipcreat(const char *name, const char *unit, unsigned char length, c
 
    // linking the socket to an interface and other settings/
    strcpy( tm.inport[ipctr]->ifr.ifr_name, ifname);
-   ioctl( tm.inport[ipctr]->sockin, SIOCGIFINDEX, & tm.inport[ipctr]->ifr);
+   ioctl(tm.inport[ipctr]->sockin, SIOCGIFINDEX, & tm.inport[ipctr]->ifr);
    tm.inport[ipctr]->addr.can_family  = AF_CAN;
    tm.inport[ipctr]->addr.can_ifindex =  tm.inport[ipctr]->ifr.ifr_ifindex;
 
@@ -193,7 +195,7 @@ int ModMngr::ipcreat(const char *name, const char *unit, unsigned char length, c
 // thread to receive  a frame
 int ModMngr::canrecv (int id, int period)
 {
-   int nbytes, i;
+   int nbytes;
    unsigned char length = tm.inport[id]->length;
 
    for(;;){
@@ -208,6 +210,7 @@ int ModMngr::canrecv (int id, int period)
 }
 
 // read a value
+// return -1 on error, +1 if the returned value is a new one and 0 if is an old one
 int ModMngr::pread(void *value,  int size, int id)
 {
    int nbytes, i;
@@ -220,15 +223,10 @@ int ModMngr::pread(void *value,  int size, int id)
    }
 
    memcpy(value, &tm.inport[id]->frame.data, size);
-   //tm.inport[id]->idx = tm.inport[id]->frame.can_id;
-   //tm.inport[id]->length = tm.inport[id]->frame.can_dlc;
-   // test if it is an updated value or an old one
    if(tm.inport[id]->updated == 1){
      tm.inport[id]->updated =0;
      return 1;
    }
-
-   //cerr << "pread: msg succesfully received\n";
    return 0;
 }
 
