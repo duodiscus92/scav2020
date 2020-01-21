@@ -5,18 +5,18 @@ Elle offre:
 1) une interface entre le code C++ d' une application et la librairie confini qui est en C
 2) une API très simple pour récupérer les valeurs d'un fichier .ini en fournissant des paires <section, clé>
 
-Fichier requis : 
-==>scavini.h
+Fichiers requis : 
 ==>parseini.h
+==>inimngr.h
 
-==>confini.c à compiler obligatoirement avec gcc
-gcc -c parseini.c -o parse.o
+==>parseini.c à compiler obligatoirement avec gcc
+gcc -c parseini.c -o parseini.o
 
 ==>scavini.cpp à compiler obligatoirement avec g++
-g++ -c scavini.cpp -o scavini.o
+g++ -c inimngr.cpp -o inimngr.o
 
 ==> votre application en C++: par exemple: monappli.cpp à compiler et lier comme suit:
-g++ monappli.cpp parse.o scavini.o -o monappli -lconfini
+g++ monappli.cpp parsini.o inimngr.o -o monappli -lconfini
 
 Bien sur, il faut avoir installé et activé la librairie confini:
 https://madmurphy.github.io/libconfini/html/index.html
