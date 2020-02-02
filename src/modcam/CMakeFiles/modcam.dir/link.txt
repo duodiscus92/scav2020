@@ -1,0 +1,1 @@
+/usr/bin/c++   -pthread -O3 -DNDEBUG   CMakeFiles/modcam.dir/modcam.cpp.o  -o modcam ../modmngr/libmodmngr.a 

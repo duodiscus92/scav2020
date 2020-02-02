@@ -1,0 +1,1 @@
+/usr/bin/c++   -pthread -O3 -DNDEBUG   CMakeFiles/launcher.dir/launcher.cpp.o  -o launcher ../modmngr/libmodmngr.a -lconfini ../parser/libparseini.a 

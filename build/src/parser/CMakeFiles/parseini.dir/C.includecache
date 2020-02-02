@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/scav2020/src/parser/parseini.c
+stdlib.h
+-
+confini.h
+-
+parseini.h
+/home/pi/scav2020/src/parser/parseini.h
+
+/home/pi/scav2020/src/parser/parseini.h
+string.h
+-
+

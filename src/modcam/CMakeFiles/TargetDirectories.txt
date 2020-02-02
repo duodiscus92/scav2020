@@ -1,0 +1,6 @@
+/home/pi/scav2020/src/modcam/CMakeFiles/rebuild_cache.dir
+/home/pi/scav2020/src/modcam/CMakeFiles/edit_cache.dir
+/home/pi/scav2020/src/modcam/CMakeFiles/modcam.dir
+/home/pi/scav2020/src/modcam/modmngr/CMakeFiles/rebuild_cache.dir
+/home/pi/scav2020/src/modcam/modmngr/CMakeFiles/edit_cache.dir
+/home/pi/scav2020/src/modcam/modmngr/CMakeFiles/modmngr.dir

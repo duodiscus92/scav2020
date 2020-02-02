@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/scav2020/src/hasher/hasher.c
+hasher.h
+/home/pi/scav2020/src/hasher/hasher.h
+
+/home/pi/scav2020/src/hasher/hasher.h
+mhash.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmodmngr.a  CMakeFiles/modmngr.dir/modmngr.cpp.o
+/usr/bin/ranlib libmodmngr.a

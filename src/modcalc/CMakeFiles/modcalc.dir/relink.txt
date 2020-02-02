@@ -1,0 +1,1 @@
+/usr/bin/c++   -pthread   CMakeFiles/modcalc.dir/modcalc.cpp.o  -o CMakeFiles/CMakeRelink.dir/modcalc modmngr/libmodmngr.a 

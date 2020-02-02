@@ -1,0 +1,1 @@
+/usr/bin/cc  -O3 -DNDEBUG   CMakeFiles/mdl.dir/mdl.c.o  -o mdl -Wl,-rpath,/home/pi/scav2020/build/src/hasher: ../hasher/libhasher.so -lmhash 

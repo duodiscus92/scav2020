@@ -1,0 +1,1 @@
+/usr/bin/c++   -pthread -O3 -DNDEBUG   CMakeFiles/modobs.dir/modobs.cpp.o  -o modobs ../modmngr/libmodmngr.a -lconfini ../parser/libparseini.a 

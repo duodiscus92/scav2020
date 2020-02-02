@@ -1,0 +1,12 @@
+/home/pi/scav2020/src/modcalc/CMakeFiles/install/local.dir
+/home/pi/scav2020/src/modcalc/CMakeFiles/install.dir
+/home/pi/scav2020/src/modcalc/CMakeFiles/edit_cache.dir
+/home/pi/scav2020/src/modcalc/CMakeFiles/rebuild_cache.dir
+/home/pi/scav2020/src/modcalc/CMakeFiles/modcalc.dir
+/home/pi/scav2020/src/modcalc/CMakeFiles/list_install_components.dir
+/home/pi/scav2020/src/modcalc/modmngr/CMakeFiles/install/local.dir
+/home/pi/scav2020/src/modcalc/modmngr/CMakeFiles/install.dir
+/home/pi/scav2020/src/modcalc/modmngr/CMakeFiles/modmngr.dir
+/home/pi/scav2020/src/modcalc/modmngr/CMakeFiles/edit_cache.dir
+/home/pi/scav2020/src/modcalc/modmngr/CMakeFiles/rebuild_cache.dir
+/home/pi/scav2020/src/modcalc/modmngr/CMakeFiles/list_install_components.dir

@@ -1,0 +1,1 @@
+/usr/bin/cc  -O3 -DNDEBUG   CMakeFiles/mul.dir/mul.c.o  -o mul -Wl,-rpath,/home/pi/scav2020/build/src/hasher: ../hasher/libhasher.so -lmhash 

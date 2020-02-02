@@ -1,0 +1,7 @@
+/usr/local/lib/libhasher.so
+/usr/local/bin/mul
+/usr/local/bin/mdl
+/usr/local/bin/launcher
+/usr/local/bin/modcalc
+/usr/local/bin/modcam
+/usr/local/bin/modobs

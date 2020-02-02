@@ -1,0 +1,6 @@
+/home/pi/scav2020/src/modobs/CMakeFiles/rebuild_cache.dir
+/home/pi/scav2020/src/modobs/CMakeFiles/edit_cache.dir
+/home/pi/scav2020/src/modobs/CMakeFiles/modobs.dir
+/home/pi/scav2020/src/modobs/modmngr/CMakeFiles/rebuild_cache.dir
+/home/pi/scav2020/src/modobs/modmngr/CMakeFiles/edit_cache.dir
+/home/pi/scav2020/src/modobs/modmngr/CMakeFiles/modmngr.dir
