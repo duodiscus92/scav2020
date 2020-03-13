@@ -13,6 +13,8 @@
 #define CONVSEVERITY(s) (myprint.convert_severity(s))
 #define PRINTOUT(g,fmt, ...) (myprint.printout(g, __FILE__, __FUNCTION__, __LINE__, fmt, __VA_ARGS__))
 #define PRINTERR(g,fmt, ...) (myprint.printerr(g, __FILE__, __FUNCTION__, __LINE__, fmt, __VA_ARGS__))
+//#define PRINTOUT(g,fmt, ...) (myprint.printout(g, __FILE__, __FUNCTION__, __LINE__,  __VA_ARGS__))
+//#define PRINTERR(g,fmt, ...) (myprint.printerr(g, __FILE__, __FUNCTION__, __LINE__,  __VA_ARGS__))
 
 
 //namespace A
@@ -30,6 +32,8 @@ public:
    SEVERITY convert_severity(const char *severity);
    int printout(SEVERITY level, const char *fi, const char *fu, int li,  const char *format, ...);
    int printerr(SEVERITY level, const char *fi, const char *fu, int li,  const char *format, ...);
+   //int printout(SEVERITY level, const char *fi, const char *fu, int li, ...);
+   //int printerr(SEVERITY level, const char *fi, const char *fu, int li, ...);
 
    // not used in this class but intersting anyway
    char *itoa(int i, char *s);

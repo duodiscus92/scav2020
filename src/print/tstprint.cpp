@@ -8,6 +8,7 @@ int main(void)
 {
    int i = 1234;
 
+   PRINTERR(ERROR, "Hello", NULL);
    PRINTERR(DEBUG,"1Bonjour au niveau %d ", DEBUG);
    PRINTERR(INFO, "2Bonjour au niveau %d ", INFO);
    PRINTERR(WARNING, "3Bonjour au niveau %d ", WARNING);

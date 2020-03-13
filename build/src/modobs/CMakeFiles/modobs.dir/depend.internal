@@ -4,4 +4,6 @@
 src/modobs/CMakeFiles/modobs.dir/modobs.cpp.o
  ../src/launcher/../loader/loader.h
  ../src/launcher/../modmngr/modmngr.h
+ ../src/modobs/../print/objprint.h
+ ../src/modobs/../print/print.h
  /home/pi/scav2020/src/modobs/modobs.cpp

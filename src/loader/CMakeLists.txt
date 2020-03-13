@@ -17,6 +17,10 @@ project(loader)
 #pass the version number to the source  code
 #configure_file(tutorialConfig.h.in tutorialConfig.h)
 
+#pass option to compiler
+set(CMAKE_CXX_FLAGS "-I/home/pi/scav2020/includes")
+
+
 #add_executable(tutorial $(SRCS) $(HEADERS))
 add_executable(mul mul.c)
 add_executable(mdl mdl.c)

@@ -1,6 +1,6 @@
 #include "print.h"
-#include "../parser/inimngr.h"
-#include "../loader/loader.h"
+//#include "../parser/inimngr.h"
+#include <inimngr.h>
 
 print::print()
 {
@@ -65,6 +65,7 @@ SEVERITY print::convert_severity(const char *severity)
 }
 
 int print::printerr(SEVERITY level, const char *fi, const char *fu, int li,  const char *format, ...)
+//int print::printerr(SEVERITY level, const char *fi, const char *fu, int li, ...)
 {
    char t[80];
    va_list args;
@@ -84,6 +85,7 @@ int print::printerr(SEVERITY level, const char *fi, const char *fu, int li,  con
 }
 
 int print::printout(SEVERITY level, const char *fi, const char *fu, int li,  const char *format, ...)
+//int print::printout(SEVERITY level, const char *fi, const char *fu, int li, ...)
 {
    va_list args;
    va_start(args,format);

@@ -91,6 +91,7 @@ modobs_EXTERNAL_OBJECTS =
 src/modobs/modobs: src/modobs/CMakeFiles/modobs.dir/modobs.cpp.o
 src/modobs/modobs: src/modobs/CMakeFiles/modobs.dir/build.make
 src/modobs/modobs: src/modmngr/libmodmngr.a
+src/modobs/modobs: src/print/libprint.a
 src/modobs/modobs: src/parser/libparseini.a
 src/modobs/modobs: src/modobs/CMakeFiles/modobs.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pi/scav2020/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable modobs"

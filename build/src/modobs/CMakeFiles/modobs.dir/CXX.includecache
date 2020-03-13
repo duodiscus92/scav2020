@@ -50,7 +50,27 @@ mutex
 ../loader/loader.h
 ../src/launcher/../loader/loader.h
 
+../src/modobs/../print/objprint.h
+
+../src/modobs/../print/print.h
+stdarg.h
+-
+time.h
+-
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+iostream
+-
+
 /home/pi/scav2020/src/modobs/modobs.cpp
+print.h
+-
+objprint.h
+-
 modmngr.h
-/home/pi/scav2020/src/modobs/modmngr.h
+-
 

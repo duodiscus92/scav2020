@@ -14,6 +14,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../src/modcalc/../modmngr"
   "../src/modcam/../modmngr"
   "../src/modobs/../modmngr"
+  "../src/modobs/../print"
   "../src/launcher/../parseini"
   "../src/launcher/../inimngr"
   )

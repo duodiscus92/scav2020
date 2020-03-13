@@ -12,6 +12,7 @@ project(modobs)
  target_include_directories(modmngr PUBLIC
  #   "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/../modmngr"
+    "${PROJECT_SOURCE_DIR}/../print"
  )
 
 #pass the version number to the source  code
@@ -24,7 +25,7 @@ add_executable(modobs modobs.cpp)
 set(CMAKE_CXX_FLAGS "-pthread")
 
 #libnkl to library
-target_link_libraries(modobs PUBLIC modmngr confini)
+target_link_libraries(modobs PUBLIC modmngr print confini)
 
 #install in /usr/local/bin (on debian)
 install (

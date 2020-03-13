@@ -1,4 +1,5 @@
-#include "modmngr.h"
+//#include "modmngr.h"
+#include <modmngr.h>
 #include <thread>
 #include <chrono>
 using namespace std;

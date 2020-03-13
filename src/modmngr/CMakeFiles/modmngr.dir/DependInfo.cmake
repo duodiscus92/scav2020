@@ -10,13 +10,18 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "src/launcher/../modmngr"
   "src/modcalc/../modmngr"
   "src/modcam/../modmngr"
   "src/modobs/../modmngr"
+  "src/modobs/../print"
+  "src/launcher/../parseini"
+  "src/launcher/../inimngr"
   )
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
+  "/home/pi/scav2020/src/parser/CMakeFiles/parseini.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

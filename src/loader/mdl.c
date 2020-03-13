@@ -1,5 +1,7 @@
-#include "../hasher/hasher.h"
+//#include "../hasher/hasher.h"
 #include "loader.h"
+#include <hasher.h>
+//#include <loader.h>
 
 char *myctime(char *strtime)
 {

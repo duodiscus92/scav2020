@@ -24,7 +24,8 @@ https://madmurphy.github.io/libconfini/html/index.html
 */
 /*==================================================*/
 
-#include "inimngr.h"
+//include "inimngr.h"
+#include <inimngr.h>
 #include <fstream>
 using namespace std; 
 

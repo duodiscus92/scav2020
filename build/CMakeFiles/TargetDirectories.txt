@@ -24,6 +24,15 @@
 /home/pi/scav2020/build/src/parser/CMakeFiles/package_source.dir
 /home/pi/scav2020/build/src/parser/CMakeFiles/install/strip.dir
 /home/pi/scav2020/build/src/parser/CMakeFiles/edit_cache.dir
+/home/pi/scav2020/build/src/print/CMakeFiles/install.dir
+/home/pi/scav2020/build/src/print/CMakeFiles/list_install_components.dir
+/home/pi/scav2020/build/src/print/CMakeFiles/rebuild_cache.dir
+/home/pi/scav2020/build/src/print/CMakeFiles/install/local.dir
+/home/pi/scav2020/build/src/print/CMakeFiles/print.dir
+/home/pi/scav2020/build/src/print/CMakeFiles/package.dir
+/home/pi/scav2020/build/src/print/CMakeFiles/package_source.dir
+/home/pi/scav2020/build/src/print/CMakeFiles/install/strip.dir
+/home/pi/scav2020/build/src/print/CMakeFiles/edit_cache.dir
 /home/pi/scav2020/build/src/modmngr/CMakeFiles/install/local.dir
 /home/pi/scav2020/build/src/modmngr/CMakeFiles/install.dir
 /home/pi/scav2020/build/src/modmngr/CMakeFiles/list_install_components.dir

@@ -3,5 +3,7 @@
 
 src/modobs/CMakeFiles/modobs.dir/modobs.cpp.o: ../src/launcher/../loader/loader.h
 src/modobs/CMakeFiles/modobs.dir/modobs.cpp.o: ../src/launcher/../modmngr/modmngr.h
+src/modobs/CMakeFiles/modobs.dir/modobs.cpp.o: ../src/modobs/../print/objprint.h
+src/modobs/CMakeFiles/modobs.dir/modobs.cpp.o: ../src/modobs/../print/print.h
 src/modobs/CMakeFiles/modobs.dir/modobs.cpp.o: ../src/modobs/modobs.cpp
 

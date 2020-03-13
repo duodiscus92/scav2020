@@ -1,1 +1,1 @@
-/usr/bin/c++   -pthread -O3 -DNDEBUG   CMakeFiles/modcalc.dir/modcalc.cpp.o  -o modcalc ../modmngr/libmodmngr.a 
+/usr/bin/c++   -pthread -O3 -DNDEBUG   CMakeFiles/modcalc.dir/modcalc.cpp.o  -o modcalc ../modmngr/libmodmngr.a -lconfini ../parser/libparseini.a 

@@ -5,6 +5,4 @@ src/parser/CMakeFiles/parseini.dir/parseini.c.o: ../src/parser/parseini.c
 src/parser/CMakeFiles/parseini.dir/parseini.c.o: ../src/parser/parseini.h
 
 src/parser/CMakeFiles/parseini.dir/inimngr.cpp.o: ../src/parser/inimngr.cpp
-src/parser/CMakeFiles/parseini.dir/inimngr.cpp.o: ../src/parser/inimngr.h
-src/parser/CMakeFiles/parseini.dir/inimngr.cpp.o: ../src/parser/parseini.h
 

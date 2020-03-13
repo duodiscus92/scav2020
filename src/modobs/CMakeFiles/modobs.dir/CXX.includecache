@@ -7,10 +7,30 @@
 #IncludeRegexTransform: 
 
 /home/pi/scav2020/src/modobs/modobs.cpp
+../print/print.h
+/home/pi/scav2020/src/print/print.h
+../print/objprint.h
+/home/pi/scav2020/src/print/objprint.h
 modmngr.h
 /home/pi/scav2020/src/modobs/modmngr.h
 
-src/modcalc/../loader/loader.h
+/home/pi/scav2020/src/print/objprint.h
+
+/home/pi/scav2020/src/print/print.h
+stdarg.h
+-
+time.h
+-
+stdio.h
+-
+string.h
+-
+stdlib.h
+-
+iostream
+-
+
+src/launcher/../loader/loader.h
 stdio.h
 -
 stdlib.h
@@ -36,7 +56,7 @@ linux/can.h
 linux/can/raw.h
 -
 
-src/modcalc/../modmngr/modmngr.h
+src/launcher/../modmngr/modmngr.h
 stdio.h
 -
 string.h
@@ -52,5 +72,5 @@ linux/can/raw.h
 mutex
 -
 ../loader/loader.h
-src/modcalc/../loader/loader.h
+src/launcher/../loader/loader.h
 

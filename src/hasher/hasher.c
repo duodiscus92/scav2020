@@ -1,4 +1,5 @@
-#include "hasher.h"
+//#include "hasher.h"
+#include <hasher.h>
 
 //#define STAND_ALONE
 

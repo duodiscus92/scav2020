@@ -8,15 +8,7 @@
 
 /home/pi/scav2020/src/parser/inimngr.cpp
 inimngr.h
-/home/pi/scav2020/src/parser/inimngr.h
-
-/home/pi/scav2020/src/parser/inimngr.h
-iostream
 -
-parseini.h
-/home/pi/scav2020/src/parser/parseini.h
-
-/home/pi/scav2020/src/parser/parseini.h
-string.h
+fstream
 -
 

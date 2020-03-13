@@ -9,11 +9,16 @@ set(CMAKE_BUILD_TYPE Release)
 #ths is a virtuel project as there is no executable with this name
 project(scav2020)
 
+#pass option to compiler
+##set(CMAKE_CXX_FLAGS "-I/home/pi/scav2020/includes")
+
 
 # subdir for the hashlib
 add_subdirectory(src/hasher)
 # subdir for the paseinilib
 add_subdirectory(src/parser)
+# subdir for printlib
+add_subdirectory(src/print)
 # subdir of the modmngrlib
 add_subdirectory(src/modmngr)
 # subdir of the loader
@@ -26,12 +31,6 @@ add_subdirectory(src/modcalc)
 add_subdirectory(src/modcam)
 #subdir of the obstacle detection modul
 add_subdirectory(src/modobs)
-
-# path to find include files
-#target_include_directories(
-#   scav2020 PUBLIC
-#   "${PROJECT_BINARY_DIR}/src"
-#)
 
 # the following lines a required to buil an installer
 include(InstallRequiredSystemLibraries)

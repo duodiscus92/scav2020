@@ -14,6 +14,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../src/modcalc/../modmngr"
   "../src/modcam/../modmngr"
   "../src/modobs/../modmngr"
+  "../src/modobs/../print"
   "../src/launcher/../parseini"
   "../src/launcher/../inimngr"
   )
@@ -21,6 +22,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
   "/home/pi/scav2020/build/src/modmngr/CMakeFiles/modmngr.dir/DependInfo.cmake"
+  "/home/pi/scav2020/build/src/print/CMakeFiles/print.dir/DependInfo.cmake"
   "/home/pi/scav2020/build/src/parser/CMakeFiles/parseini.dir/DependInfo.cmake"
   )
 

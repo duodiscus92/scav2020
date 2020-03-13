@@ -1,0 +1,2 @@
+/usr/bin/ar qc libparseini.a  CMakeFiles/parseini.dir/parseini.c.o CMakeFiles/parseini.dir/inimngr.cpp.o
+/usr/bin/ranlib libparseini.a

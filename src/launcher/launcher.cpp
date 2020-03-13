@@ -3,6 +3,8 @@
 
 #include "../parser/inimngr.h"
 #include "../loader/loader.h"
+//#include <inimngr.h>
+//#include <loader.h>
 
 #define MAX_MODULE 100
 

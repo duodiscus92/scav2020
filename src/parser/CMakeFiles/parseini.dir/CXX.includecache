@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/pi/scav2020/src/parser/inimngr.cpp
+inimngr.h
+/home/pi/scav2020/src/parser/inimngr.h
+fstream
+-
+
+/home/pi/scav2020/src/parser/inimngr.h
+iostream
+-
+parseini.h
+/home/pi/scav2020/src/parser/parseini.h
+
+/home/pi/scav2020/src/parser/parseini.h
+string.h
+-
+

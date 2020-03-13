@@ -1,0 +1,1 @@
+/usr/bin/cc  -fPIC -O3 -DNDEBUG  -shared -Wl,-soname,libhasher.so -o libhasher.so CMakeFiles/hasher.dir/hasher.c.o 

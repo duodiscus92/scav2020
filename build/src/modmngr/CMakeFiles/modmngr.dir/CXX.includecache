@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/scav2020/src/loader/loader.h
+../src/launcher/../loader/loader.h
 stdio.h
 -
 stdlib.h
@@ -32,15 +32,7 @@ linux/can.h
 linux/can/raw.h
 -
 
-/home/pi/scav2020/src/modmngr/modmngr.cpp
-modmngr.h
-/home/pi/scav2020/src/modmngr/modmngr.h
-thread
--
-chrono
--
-
-/home/pi/scav2020/src/modmngr/modmngr.h
+../src/launcher/../modmngr/modmngr.h
 stdio.h
 -
 string.h
@@ -56,5 +48,13 @@ linux/can/raw.h
 mutex
 -
 ../loader/loader.h
-/home/pi/scav2020/src/loader/loader.h
+../src/launcher/../loader/loader.h
+
+/home/pi/scav2020/src/modmngr/modmngr.cpp
+modmngr.h
+-
+thread
+-
+chrono
+-
 

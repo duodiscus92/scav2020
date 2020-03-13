@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/scav2020/src/hasher/hasher.h
+../src/loader/../hasher/hasher.h
 mhash.h
 -
 stdio.h
@@ -43,8 +43,8 @@ linux/can/raw.h
 -
 
 /home/pi/scav2020/src/loader/mul.c
-../hasher/hasher.h
-/home/pi/scav2020/src/hasher/hasher.h
 loader.h
 /home/pi/scav2020/src/loader/loader.h
+hasher.h
+-
 

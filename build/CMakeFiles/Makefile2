@@ -170,6 +170,61 @@ clean: src/parser/CMakeFiles/parseini.dir/clean
 .PHONY : clean
 
 #=============================================================================
+# Directory level rules for directory src/print
+
+# Convenience name for "all" pass in the directory.
+src/print/all: src/print/CMakeFiles/print.dir/all
+
+.PHONY : src/print/all
+
+# Convenience name for "clean" pass in the directory.
+src/print/clean: src/print/CMakeFiles/print.dir/clean
+
+.PHONY : src/print/clean
+
+# Convenience name for "preinstall" pass in the directory.
+src/print/preinstall:
+
+.PHONY : src/print/preinstall
+
+#=============================================================================
+# Target rules for target src/print/CMakeFiles/print.dir
+
+# All Build rule for target.
+src/print/CMakeFiles/print.dir/all: src/parser/CMakeFiles/parseini.dir/all
+	$(MAKE) -f src/print/CMakeFiles/print.dir/build.make src/print/CMakeFiles/print.dir/depend
+	$(MAKE) -f src/print/CMakeFiles/print.dir/build.make src/print/CMakeFiles/print.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/pi/scav2020/build/CMakeFiles --progress-num=20,21 "Built target print"
+.PHONY : src/print/CMakeFiles/print.dir/all
+
+# Include target in all.
+all: src/print/CMakeFiles/print.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+src/print/CMakeFiles/print.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/scav2020/build/CMakeFiles 5
+	$(MAKE) -f CMakeFiles/Makefile2 src/print/CMakeFiles/print.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/scav2020/build/CMakeFiles 0
+.PHONY : src/print/CMakeFiles/print.dir/rule
+
+# Convenience name for target.
+print: src/print/CMakeFiles/print.dir/rule
+
+.PHONY : print
+
+# clean rule for target.
+src/print/CMakeFiles/print.dir/clean:
+	$(MAKE) -f src/print/CMakeFiles/print.dir/build.make src/print/CMakeFiles/print.dir/clean
+.PHONY : src/print/CMakeFiles/print.dir/clean
+
+# clean rule for target.
+clean: src/print/CMakeFiles/print.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Directory level rules for directory src/modmngr
 
 # Convenience name for "all" pass in the directory.
@@ -509,6 +564,7 @@ src/modobs/preinstall:
 
 # All Build rule for target.
 src/modobs/CMakeFiles/modobs.dir/all: src/parser/CMakeFiles/parseini.dir/all
+src/modobs/CMakeFiles/modobs.dir/all: src/print/CMakeFiles/print.dir/all
 src/modobs/CMakeFiles/modobs.dir/all: src/modmngr/CMakeFiles/modmngr.dir/all
 	$(MAKE) -f src/modobs/CMakeFiles/modobs.dir/build.make src/modobs/CMakeFiles/modobs.dir/depend
 	$(MAKE) -f src/modobs/CMakeFiles/modobs.dir/build.make src/modobs/CMakeFiles/modobs.dir/build
@@ -522,7 +578,7 @@ all: src/modobs/CMakeFiles/modobs.dir/all
 
 # Build rule for subdir invocation for target.
 src/modobs/CMakeFiles/modobs.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/scav2020/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/scav2020/build/CMakeFiles 9
 	$(MAKE) -f CMakeFiles/Makefile2 src/modobs/CMakeFiles/modobs.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/scav2020/build/CMakeFiles 0
 .PHONY : src/modobs/CMakeFiles/modobs.dir/rule

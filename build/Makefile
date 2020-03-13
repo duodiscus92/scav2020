@@ -203,6 +203,19 @@ parseini/fast:
 .PHONY : parseini/fast
 
 #=============================================================================
+# Target rules for targets named print
+
+# Build rule for target.
+print: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 print
+.PHONY : print
+
+# fast build rule for target.
+print/fast:
+	$(MAKE) -f src/print/CMakeFiles/print.dir/build.make src/print/CMakeFiles/print.dir/build
+.PHONY : print/fast
+
+#=============================================================================
 # Target rules for targets named modmngr
 
 # Build rule for target.
@@ -309,6 +322,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... hasher"
 	@echo "... parseini"
+	@echo "... print"
 	@echo "... modmngr"
 	@echo "... mul"
 	@echo "... mdl"

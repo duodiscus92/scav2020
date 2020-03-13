@@ -91,6 +91,7 @@ modcam_EXTERNAL_OBJECTS =
 src/modcam/modcam: src/modcam/CMakeFiles/modcam.dir/modcam.cpp.o
 src/modcam/modcam: src/modcam/CMakeFiles/modcam.dir/build.make
 src/modcam/modcam: src/modmngr/libmodmngr.a
+src/modcam/modcam: src/parser/libparseini.a
 src/modcam/modcam: src/modcam/CMakeFiles/modcam.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pi/scav2020/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable modcam"
 	cd /home/pi/scav2020/src/modcam && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/modcam.dir/link.txt --verbose=$(VERBOSE)

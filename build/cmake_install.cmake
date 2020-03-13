@@ -36,6 +36,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/pi/scav2020/build/src/hasher/cmake_install.cmake")
   include("/home/pi/scav2020/build/src/parser/cmake_install.cmake")
+  include("/home/pi/scav2020/build/src/print/cmake_install.cmake")
   include("/home/pi/scav2020/build/src/modmngr/cmake_install.cmake")
   include("/home/pi/scav2020/build/src/loader/cmake_install.cmake")
   include("/home/pi/scav2020/build/src/launcher/cmake_install.cmake")

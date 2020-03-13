@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.7.2)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+#pass option to compiler
+##set(CMAKE_CXX_FLAGS "-I/home/pi/scav2020/includes")
+
 # set the project name
 project(launcher)
 
